@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Graph</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f9;
+        }
+
+        .graph-container {
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h2 {
+            margin-bottom: 5px;
+            font-size: 20px;
+            color: #4e44e3;
+            color: #333;
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        canvas {
+            max-width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="graph-container">
+        <h2>Monthly Progress</h2>
+        <p>This is the latest improvement</p>
+        <canvas id="monthlyProgressChart"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+        const customMessages = [
+            "Great start in January!",
+            "Good progress in February.",
+            "Outstanding performance in March!",
+            "Achieved goals in April."
+        ];
+
+        let chartInstance = null;
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('monthlyProgressChart').getContext('2d');
+
+            // Destroy the existing chart instance before creating a new one (if applicable)
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            // Create a new chart instance
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    // labels: ['', '', '', ''],
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr',],
+                    datasets: [
+                        {
+                            label: 'Progress',
+                            data: [10, 20, 50, 0], // Dynamic values
+                            borderColor: '#4e44e3',
+                            backgroundColor: 'rgba(78, 68, 227, 0.1)',
+                            // backgroundColor: 'rgba(230, 230, 254, .2)',
+                            borderWidth: 2,
+                            tension: 0.4, // Smooth curve
+                            fill: true,
+                            pointRadius: 3,
+                            pointBackgroundColor: '#4e44e3',
+                        },
+                    ],
+                },
+                options: {
+                    animation: {
+                        duration: 1000,
+                        easing: 'linear',
+                    },
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false, // Hide legend
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (tooltipItem) {
+                                    const value = tooltipItem.raw; // The point's value
+                                    const customMessage = customMessages[tooltipItem.dataIndex];
+                                    return `Value: ${value}% - ${customMessage}`;
+                                },
+                            },
+                        },
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false,
+                            },
+                        },
+                        y: {
+                            ticks: {
+                                stepSize: 20, // Interval between ticks
+                                min: 0, // Minimum value
+                                max: 100, // Maximum value
+                                callback: function (value) {
+                                    return value + '%'; // Add percentage symbol
+                                },
+                            },
+                            grid: {
+                                color: '#f5f5f5',
+                            },
+                            beginAtZero: true,
+                        },
+                    },
+                },
+            });
+        });
+    </script>
+</body>
+
+</html>

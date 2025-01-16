@@ -1,0 +1,47 @@
+{% load static %}
+{% block title %}Registration{% endblock title %}
+
+{% block page_css %}
+
+{% endblock page_css %}
+
+
+{% block content %}
+<span style="position: static; display: inline-block; height: 50px;" class="balance"></span> 
+<div class="col-sm-3" style="position: fixed; right: 15px; z-index: 10; text-align: center;">
+    {% if messages %} {% for message in messages %}
+    <div {% if messages %} class="alert alert-{{ message.tags }}" {% endif %} role="alert" style="font-family: 'Times New Roman', Times, serif;">{{ message }} {{ user.first_name }} </div>
+    {% endfor %} {% endif %}
+</div>
+<div class="container my-3">
+    <div class="row">
+        <div class="col-sm-6 offset-sm-3">
+            <div style="background-color: white; border-radius: 5px;" class="shadow p-5">
+                <div class="title">
+                    <h3 class="my-3" style="text-align: left; border-bottom: 1px solid gray; padding-bottom: 15px;" id="featured">
+                        <span style="border-bottom: 3px solid red; padding-bottom: 13px; font-weight: bold;">
+                            Customer Registration
+                        </span>
+                    </h3>
+                </div>
+                <br>
+                <form method="POST" style="font-size: 17px; font-weight: normal!important;">
+                    {% csrf_token %}
+                    {{ registration_Form }}
+                    <div class="text-end mt-3">
+                        <button type="submit" class="btn btn-danger">Submit</button>
+                    </div>
+                    <br>
+                    <div class="text-center fw-bold"><a href="{% url 'login' %}"><small><span class="text-primary">Existing User ?</span> <span class="text-danger">  Login Now</span></a></small></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br>
+<span style="position: static; display: inline-block; height: 20px;" class="balance"></span> 
+{% endblock content %}
+
+
+{% block page_js %}
+{% endblock page_js %}

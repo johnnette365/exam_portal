@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doughnut Chart</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #f9f9f9;
+    }
+
+    .container {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .chart-container {
+      width: 300px;
+      text-align: center;
+    }
+
+    .header h3 {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .legend {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .legend p {
+      margin: 5px 0;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .legend p.strikethrough {
+      text-decoration: line-through;
+      color: gray;
+    }
+
+    .legend .dot {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="chart-container">
+      <div class="header">
+        <h3>Summary</h3>
+        <button>Attempt: 90%</button> <button>Time: 45 min</button>
+        <div style="font-size: 12px;"><span></span> <span></span></div>
+      </div>
+      <canvas id="doughnutChart" style="max-width: 200px;"></canvas>
+    </div>
+    <div class="legend">
+      <p id="segmentA"><span class="dot" style="background-color: #6FB1FC;"></span> Correct: 30%</p>
+      <p id="segmentB"><span class="dot" style="background-color: #4767E3;"></span> Incorrect: 25%</p>
+      <p id="segmentC"><span class="dot" style="background-color: #C6DBFC;"></span> Missed: 35%</p>
+      <p id="segmentD"><span class="dot" style="background-color: #191B3A;"></span> Segment D: 10%</p>
+    </div>
+  </div>
+  <script>
+    const ctx = document.getElementById('doughnutChart').getContext('2d');
+
+    // Initial data
+    const data = [30, 25, 35, 10];
+    const colors = ['#6FB1FC', '#4767E3', '#C6DBFC', '#191B3A'];
+
+    // Create the chart
+    const chart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Segment A', 'Segment B', 'Segment C', 'Segment D'],
+        datasets: [{
+          data: [...data],
+          backgroundColor: [...colors],
+          borderWidth: 3,
+          hoverOffset: 10,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        cutout: '50%'
+      }
+    });
+
+    // Function to toggle a segment
+    function toggleSegment(index, legendId) {
+      const currentData = chart.data.datasets[0].data;
+      const currentColors = chart.data.datasets[0].backgroundColor;
+
+      const legendElement = document.getElementById(legendId);
+
+      if (currentData[index] !== 0) {
+        // Remove the segment by setting its value to 0 and making it transparent
+        currentData[index] = 0;
+        currentColors[index] = 'rgba(0, 0, 0, 0)';
+        legendElement.classList.add('strikethrough');
+      } else {
+        // Restore the segment
+        currentData[index] = data[index];
+        currentColors[index] = colors[index];
+        legendElement.classList.remove('strikethrough');
+      }
+
+      chart.update();
+    }
+
+    // Add event listeners to legend items
+    document.getElementById('segmentA').addEventListener('click', () => toggleSegment(0, 'segmentA'));
+    document.getElementById('segmentB').addEventListener('click', () => toggleSegment(1, 'segmentB'));
+    document.getElementById('segmentC').addEventListener('click', () => toggleSegment(2, 'segmentC'));
+    document.getElementById('segmentD').addEventListener('click', () => toggleSegment(3, 'segmentD'));
+  </script>
+</body>
+</html>
